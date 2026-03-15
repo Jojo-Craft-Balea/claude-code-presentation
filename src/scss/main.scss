@@ -1,10 +1,262 @@
+// ─── Variables ───────────────────────────────────────────────────────────────
+
+$color-bg:       #0d1117;
+$color-surface:  #161b22;
+$color-border:   #30363d;
+$color-text:     #e6edf3;
+$color-muted:    #8b949e;
+$color-accent:   #f78166;
+$color-accent2:  #79c0ff;
+$color-code-bg:  #1e2430;
+
+$font-sans: 'Segoe UI', system-ui, sans-serif;
+$font-mono: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+
+$slide-transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+
+// ─── Reset ───────────────────────────────────────────────────────────────────
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-body {
-  font-family: system-ui, sans-serif;
-  line-height: 1.5;
+// ─── Base ────────────────────────────────────────────────────────────────────
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background: $color-bg;
+  color: $color-text;
+  font-family: $font-sans;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+// ─── Presentation container ──────────────────────────────────────────────────
+
+#presentation {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  position: relative;
+}
+
+// ─── Slides ──────────────────────────────────────────────────────────────────
+
+#slides-container {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 4rem 8rem;
+  opacity: 0;
+  transform: translateX(60px);
+  transition: opacity $slide-transition, transform $slide-transition;
+  pointer-events: none;
+  overflow-y: auto;
+
+  &.active {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+  }
+
+  &.prev {
+    opacity: 0;
+    transform: translateX(-60px);
+  }
+
+  &.next {
+    opacity: 0;
+    transform: translateX(60px);
+  }
+
+  &.error {
+    color: #f85149;
+  }
+}
+
+// ─── Typography dans les slides ──────────────────────────────────────────────
+
+.slide {
+  h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: $color-accent;
+    margin-bottom: 0.5rem;
+
+    + h2 {
+      font-size: 1.75rem;
+      font-weight: 400;
+      color: $color-muted;
+      margin-bottom: 2rem;
+    }
+  }
+
+  h2 {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: $color-accent2;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid $color-border;
+  }
+
+  h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: $color-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 1.5rem 0 0.75rem;
+  }
+
+  p {
+    margin-bottom: 1rem;
+    max-width: 70ch;
+  }
+
+  ul, ol {
+    margin: 0.5rem 0 1rem 1.5rem;
+
+    li {
+      margin-bottom: 0.4rem;
+    }
+  }
+
+  strong {
+    color: #fff;
+    font-weight: 600;
+  }
+
+  em {
+    color: $color-muted;
+  }
+
+  blockquote {
+    border-left: 3px solid $color-accent;
+    padding: 0.5rem 1rem;
+    margin: 1rem 0;
+    background: rgba($color-accent, 0.05);
+    border-radius: 0 6px 6px 0;
+
+    p {
+      color: $color-muted;
+      margin-bottom: 0;
+      font-style: italic;
+    }
+  }
+
+  a {
+    color: $color-accent2;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  // Code inline
+  code:not(pre code) {
+    background: $color-code-bg;
+    color: #ffa657;
+    padding: 0.15em 0.4em;
+    border-radius: 4px;
+    font-family: $font-mono;
+    font-size: 0.85em;
+  }
+
+  // Code blocks
+  pre {
+    background: $color-code-bg !important;
+    border: 1px solid $color-border;
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin: 1rem 0;
+    overflow-x: auto;
+    max-width: 100%;
+
+    code {
+      font-family: $font-mono;
+      font-size: 0.82em;
+      background: none !important;
+      padding: 0;
+      color: inherit;
+    }
+  }
+}
+
+// ─── Controls ────────────────────────────────────────────────────────────────
+
+#controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 0.75rem 1rem;
+  background: $color-surface;
+  border-top: 1px solid $color-border;
+
+  button {
+    background: transparent;
+    border: 1px solid $color-border;
+    color: $color-text;
+    padding: 0.4rem 1rem;
+    border-radius: 6px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+
+    &:hover:not(:disabled) {
+      background: $color-border;
+      border-color: $color-muted;
+    }
+
+    &:disabled {
+      opacity: 0.3;
+      cursor: default;
+    }
+  }
+
+  #slide-counter {
+    color: $color-muted;
+    font-size: 0.9rem;
+    min-width: 6ch;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+// ─── Progress bar ────────────────────────────────────────────────────────────
+
+#progress-bar {
+  height: 3px;
+  background: $color-border;
+
+  #progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, $color-accent 0%, $color-accent2 100%);
+    transition: width $slide-transition;
+  }
+}
+
+// ─── Scrollbar personnalisée ─────────────────────────────────────────────────
+
+.slide::-webkit-scrollbar {
+  width: 4px;
+}
+
+.slide::-webkit-scrollbar-thumb {
+  background: $color-border;
+  border-radius: 2px;
 }

@@ -1,0 +1,13 @@
+{
+  "name": "claude-code-presentation",
+  "version": "1.0.0",
+  "description": "Présentation de Claude Code",
+  "scripts": {
+    "bundle-md": "/mnt/c/Program Files/nodejs/node.exe scripts/bundle-md.js",
+    "build": "/mnt/c/Program Files/nodejs/node.exe scripts/bundle-md.js && /mnt/c/Program Files/nodejs/node.exe node_modules/sass/sass.js src/scss/main.scss dist/main.css --style=compressed",
+    "watch": "/mnt/c/Program Files/nodejs/node.exe node_modules/sass/sass.js src/scss/main.scss dist/main.css --watch"
+  },
+  "devDependencies": {
+    "sass": "^1.77.0"
+  }
+}

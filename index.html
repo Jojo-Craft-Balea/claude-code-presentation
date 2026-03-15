@@ -3,11 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Claude Code Presentation</title>
+  <title>Claude Code — Présentation</title>
   <link rel="stylesheet" href="dist/main.css" />
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/highlight.js@11/build/highlight.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11/styles/github-dark.min.css" />
 </head>
 <body>
+  <div id="presentation">
+    <div id="slides-container"></div>
 
-  <script src="src/js/main.js"></script>
+    <nav id="controls">
+      <button id="btn-prev" aria-label="Slide précédente">&#8592;</button>
+      <span id="slide-counter"></span>
+      <button id="btn-next" aria-label="Slide suivante">&#8594;</button>
+    </nav>
+
+    <div id="progress-bar"><div id="progress-fill"></div></div>
+  </div>
+
+  <script type="module" src="src/js/main.js"></script>
 </body>
 </html>

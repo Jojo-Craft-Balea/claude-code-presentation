@@ -1,5 +1,6 @@
-dist/
+dist/*.map
 node_modules/
+src/js/presentation-content.js
 *.log
 
 # OS
