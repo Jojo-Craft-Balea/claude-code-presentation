@@ -166,6 +166,41 @@ html, body {
     }
   }
 
+  // Tables
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.9em;
+
+    thead tr {
+      background: rgba($color-accent2, 0.1);
+      border-bottom: 2px solid $color-accent2;
+    }
+
+    th {
+      padding: 0.6rem 1rem;
+      text-align: left;
+      color: $color-accent2;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 0.55rem 1rem;
+      border-bottom: 1px solid $color-border;
+      color: $color-text;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    tbody tr:hover {
+      background: rgba($color-border, 0.4);
+    }
+  }
+
   // Code inline
   code:not(pre code) {
     background: $color-code-bg;
