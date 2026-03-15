@@ -148,31 +148,58 @@ Claude charge ce fichier uniquement quand il travaille sur des fichiers qui matc
 
 ---
 
-## .claude/commands
+## Skills
 
-Le dossier `.claude/commands/` permet de définir des commandes slash personnalisées, disponibles avec `/` dans Claude Code.
+Les skills remplacent et étendent les custom commands. C'est un concept unifié stocké dans **`.claude/skills/<nom>/SKILL.md`**.
 
-```
-mon-projet/
-├── .claude/
-│   └── commands/
-│       ├── review.md     ← /review
-│       ├── deploy.md     ← /deploy
-│       └── ...
-└── ...
-```
+Un skill joue **deux rôles** selon sa configuration :
 
-Chaque fichier Markdown devient une commande : son contenu est injecté comme prompt lorsque la commande est invoquée.
+### 1. Connaissance contextuelle (chargé automatiquement)
+
+Claude charge le skill quand il le juge pertinent, sans que tu le demandes.
 
 ```markdown
-<!-- .claude/commands/review.md -->
-Fais une revue de code du fichier courant :
-- Vérifie le respect des conventions du projet
-- Identifie les problèmes de performance
-- Propose des améliorations concrètes
+<!-- .claude/skills/api-conventions/SKILL.md -->
+---
+name: api-conventions
+description: REST API design conventions for our services
+---
+- Use kebab-case for URL paths
+- Always include pagination for list endpoints
 ```
 
-> Les commandes globales se placent dans `~/.claude/commands/` et sont disponibles dans tous les projets.
+### 2. Workflow invocable (déclenché manuellement)
+
+Avec `disable-model-invocation: true`, le skill devient une commande slash `/skill-name`.
+
+```markdown
+<!-- .claude/skills/fix-issue/SKILL.md -->
+---
+name: fix-issue
+description: Fix a GitHub issue
+disable-model-invocation: true
+---
+Analyze and fix the GitHub issue: $ARGUMENTS.
+
+1. Use `gh issue view` to get the issue details
+2. Search the codebase for relevant files
+3. Implement the fix
+4. Write and run tests
+5. Create a descriptive commit and open a PR
+```
+
+Invoquer avec `/fix-issue 1234`.
+
+### Règle de décision
+
+| Cas | Outil |
+|---|---|
+| Convention utile seulement parfois | Skill (chargé à la demande) |
+| Règle utile à toutes les sessions | `CLAUDE.md` |
+| Workflow avec effets de bord à déclencher manuellement | Skill avec `disable-model-invocation: true` |
+| Action qui doit toujours se produire (zéro exception) | Hook |
+
+> Les skills globaux se placent dans `~/.claude/skills/` et sont disponibles dans tous les projets.
 
 ---
 
