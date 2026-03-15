@@ -83,7 +83,11 @@ Claude analyse automatiquement le répertoire courant : structure des fichiers, 
 
 ---
 
-## CLAUDE.md — Configuration
+## Configuration
+
+---
+
+## CLAUDE.md
 
 ### Configuration locale (projet)
 
@@ -105,3 +109,121 @@ La commande `/init` demande à Claude de scanner le projet et de générer un `C
 Le fichier `~/.claude/CLAUDE.md` est chargé dans **toutes** les sessions, quel que soit le projet. C'est l'endroit pour y mettre ses préférences personnelles : langue, conventions de code, comportements à adopter ou éviter.
 
 > ⚠️ Claude applique tout ce qui est dans ce fichier à chaque conversation. N'y mettre que des instructions claires et utiles pour lui — une information floue ou hors sujet risque de perturber son comportement plutôt que de l'améliorer.
+
+---
+
+## .claude/rules
+
+Le dossier `.claude/rules/` dans un projet permet d'ajouter des règles locales, propres à ce projet.
+
+```
+mon-projet/
+├── .claude/
+│   └── rules/
+│       ├── conventions.md    ← conventions de code du projet
+│       ├── architecture.md   ← règles d'architecture
+│       └── ...
+└── ...
+```
+
+Chaque fichier Markdown dans ce dossier est automatiquement chargé par Claude au démarrage de la session.
+
+### Règles par type de fichier
+
+Un frontmatter `globs` permet de cibler un type de fichier spécifique :
+
+```markdown
+---
+globs: "**/*.test.ts"
+---
+
+Pour les fichiers de test :
+- Utiliser describe/it de Vitest
+- Ne jamais mocker la base de données
+```
+
+Claude charge ce fichier uniquement quand il travaille sur des fichiers qui matchent le glob.
+
+> Idéal pour partager des règles d'équipe : conventions de nommage, patterns à respecter, fichiers à ne jamais modifier...
+
+---
+
+## .claude/commands
+
+Le dossier `.claude/commands/` permet de définir des commandes slash personnalisées, disponibles avec `/` dans Claude Code.
+
+```
+mon-projet/
+├── .claude/
+│   └── commands/
+│       ├── review.md     ← /review
+│       ├── deploy.md     ← /deploy
+│       └── ...
+└── ...
+```
+
+Chaque fichier Markdown devient une commande : son contenu est injecté comme prompt lorsque la commande est invoquée.
+
+```markdown
+<!-- .claude/commands/review.md -->
+Fais une revue de code du fichier courant :
+- Vérifie le respect des conventions du projet
+- Identifie les problèmes de performance
+- Propose des améliorations concrètes
+```
+
+> Les commandes globales se placent dans `~/.claude/commands/` et sont disponibles dans tous les projets.
+
+---
+
+## settings.json
+
+Le fichier `~/.claude/settings.json` (global) ou `.claude/settings.json` (projet) permet de configurer le comportement de Claude.
+
+### Permissions
+
+Contrôle quelles actions Claude peut effectuer sans demander de confirmation :
+
+```json
+{
+  "permissions": {
+    "allow": ["Bash(git *)", "Bash(npm *)", "Edit"],
+    "deny": ["Bash(rm *)"]
+  }
+}
+```
+
+Le mode `bypassPermissions` autorise **toutes** les actions sans confirmation — équivalent au `Shift+Tab` vu précédemment, mais persistant :
+
+```json
+{
+  "permissions": {
+    "defaultMode": "bypassPermissions"
+  }
+}
+```
+
+> ⚠️ À réserver aux environnements isolés (CI, conteneurs). Ne jamais activer en local sur une machine de travail.
+
+### Hooks
+
+Les hooks permettent d'exécuter des commandes shell en réponse aux actions de Claude :
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [{
+      "matcher": "Bash",
+      "hooks": [{ "type": "command", "command": "echo 'Commande shell détectée'" }]
+    }],
+    "PostToolUse": [{
+      "matcher": "Edit",
+      "hooks": [{ "type": "command", "command": "npm run lint" }]
+    }]
+  }
+}
+```
+
+Événements disponibles : `PreToolUse`, `PostToolUse`, `Notification`, `Stop`
+
+> Utile pour lancer automatiquement le linter après chaque modification de fichier, notifier une action sensible, logger les outils utilisés...
