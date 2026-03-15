@@ -61,3 +61,22 @@ Claude analyse automatiquement le répertoire courant : structure des fichiers, 
 **Tout ce qui est dans le dossier fait partie de son contexte.**
 
 > Lance toujours Claude **depuis la racine du projet** pour qu'il ait le contexte complet.
+
+---
+
+## Commandes & raccourcis essentiels
+
+`/help` — affiche toutes les commandes disponibles
+
+`@fichier` — ajoute un fichier précis dans le contexte de la conversation
+
+`/commande` — lance une commande slash
+
+`!commande` — exécute une commande shell directement sans quitter Claude
+
+`Esc Esc` — efface le texte en cours de saisie ; si le champ est vide, affiche l'historique des conversations
+
+`Shift Tab` — change le mode d'exécution :
+- **Normal** — Claude demande confirmation avant chaque action
+- **Auto-accept** — Claude applique les modifications sans demander
+- **Plan** — Claude planifie uniquement, sans rien exécuter
