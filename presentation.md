@@ -13,6 +13,26 @@
 
 ---
 
+## Claude web vs Claude Code
+
+| | Claude (web) | Claude Code |
+|---|---|---|
+| **Interface** | Navigateur | Terminal |
+| **Accès aux fichiers** | ✗ | ✓ |
+| **Exécute des commandes** | ✗ | ✓ |
+| **Lit ton codebase** | ✗ | ✓ |
+| **Agit de manière autonome** | ✗ | ✓ |
+
+Le LLM sous-jacent est le **même** — c'est l'environnement qui change.
+
+**Claude web** — mode one-shot : tu poses une question, il répond, c'est fini.
+
+**Claude Code** — mode agent : il tourne une **boucle autonome** — planifie, exécute, observe les résultats, s'adapte — et recommence jusqu'à ce que la tâche soit terminée.
+
+> Claude web te répond. Claude Code **agit**.
+
+---
+
 ## Installation
 
 **macOS / Linux / WSL**
