@@ -94,8 +94,10 @@ function init() {
     setupControls();
     renderSlide(0);
   } catch (err) {
-    document.getElementById('slides-container').innerHTML =
-      `<div class="slide error"><h2>Erreur de chargement</h2><p>${err.message}</p></div>`;
+    const errorSlide = document.createElement('div');
+    errorSlide.className = 'slide error active';
+    errorSlide.innerHTML = `<h2>Erreur de chargement</h2><p>${err.message}</p>`;
+    document.getElementById('slides-container').appendChild(errorSlide);
   }
 }
 
