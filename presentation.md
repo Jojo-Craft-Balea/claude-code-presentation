@@ -80,3 +80,28 @@ Claude analyse automatiquement le répertoire courant : structure des fichiers, 
 - **accept edits on** — Claude applique les modifications sans demander
 - **plan mode on** — Claude planifie uniquement, sans rien exécuter
 - **bypass permissions on** — Claude exécute toutes les actions sans aucune confirmation, y compris les opérations sensibles ⚠️
+
+---
+
+## CLAUDE.md — Configuration
+
+### Configuration locale (projet)
+
+Un fichier `CLAUDE.md` peut être placé n'importe où dans le projet. Claude l'intègre automatiquement dans son contexte lorsqu'il travaille sur des fichiers situés au même niveau ou en dessous.
+
+```
+mon-projet/
+├── CLAUDE.md           ← contexte global du projet
+├── src/
+│   ├── CLAUDE.md       ← contexte spécifique au dossier src/
+│   └── ...
+└── ...
+```
+
+La commande `/init` demande à Claude de scanner le projet et de générer un `CLAUDE.md` adapté à son contenu.
+
+### Configuration globale
+
+Le fichier `~/.claude/CLAUDE.md` est chargé dans **toutes** les sessions, quel que soit le projet. C'est l'endroit pour y mettre ses préférences personnelles : langue, conventions de code, comportements à adopter ou éviter.
+
+> ⚠️ Claude applique tout ce qui est dans ce fichier à chaque conversation. N'y mettre que des instructions claires et utiles pour lui — une information floue ou hors sujet risque de perturber son comportement plutôt que de l'améliorer.
