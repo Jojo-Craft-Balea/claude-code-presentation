@@ -46,3 +46,18 @@ irm https://claude.ai/install.ps1 | iex
 ```
 
 Documentation officielle : [code.claude.com/docs/en/quickstart](https://code.claude.com/docs/en/quickstart)
+
+---
+
+## Lancer Claude dans le terminal
+
+```bash
+cd mon-projet
+claude
+```
+
+Claude analyse automatiquement le répertoire courant : structure des fichiers, code source, historique git, fichiers de config...
+
+**Tout ce qui est dans le dossier fait partie de son contexte.**
+
+> Lance toujours Claude **depuis la racine du projet** pour qu'il ait le contexte complet.
