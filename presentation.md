@@ -277,3 +277,71 @@ Les hooks permettent d'exécuter des commandes shell en réponse aux actions de 
 > Utile pour lancer automatiquement le linter après chaque modification de fichier, notifier une action sensible, logger les outils utilisés...
 
 ---
+
+## MCP — Model Context Protocol
+
+**MCP** est un protocole ouvert qui permet à Claude de se connecter à des **sources de données et outils externes**.
+
+Sans MCP, Claude ne peut accéder qu'à ce qui est dans son contexte (fichiers, bash, git).
+Avec MCP, il peut interagir avec n'importe quel système tiers : bases de données, APIs, services cloud, outils métier...
+
+> MCP transforme Claude en un agent connecté à ton écosystème entier.
+
+---
+
+### MCP > Comment ça marche ?
+
+Un **serveur MCP** est un petit processus qui expose des **outils** (actions) et/ou des **ressources** (données) à Claude via le protocole MCP.
+
+```
+Claude Code
+    │
+    ├── MCP Server : GitHub     → lire/créer des issues, PRs...
+    ├── MCP Server : Postgres   → lire/écrire en base
+    ├── MCP Server : Jira       → consulter/créer des tickets
+    └── MCP Server : ...        → tout ce que tu veux
+```
+
+Claude découvre automatiquement les outils exposés par les serveurs configurés et peut les utiliser dans ses réponses.
+
+---
+
+### MCP > Configuration
+
+Les serveurs MCP se configurent dans **`.mcp.json`** à la racine du projet (ou `~/.claude/.mcp.json` pour une config globale) :
+
+```json
+{
+  "mcpServers": {
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "ghp_..."
+      }
+    },
+    "postgres": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-postgres", "postgresql://localhost/mydb"]
+    }
+  }
+}
+```
+
+> `.mcp.json` peut être commité dans le repo — pratique pour partager la config MCP avec toute l'équipe.
+
+---
+
+### MCP > Serveurs disponibles
+
+Il existe déjà un large écosystème de serveurs MCP prêts à l'emploi :
+
+- **Outils dev** : GitHub, GitLab, Jira, Linear, Sentry
+- **Bases de données** : PostgreSQL, SQLite, MySQL, MongoDB
+- **Cloud** : AWS, Azure, GCP
+- **Productivité** : Google Drive, Notion, Slack, Gmail
+- **Navigateur** : Puppeteer, Playwright (pour automatiser le browser)
+
+> [modelcontextprotocol.io/servers](https://modelcontextprotocol.io/servers) — répertoire officiel des serveurs MCP
+
+---
