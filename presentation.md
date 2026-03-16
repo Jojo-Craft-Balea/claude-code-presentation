@@ -54,6 +54,13 @@ Claude analyse automatiquement le répertoire courant : structure des fichiers, 
 
 > Lance toujours Claude **depuis la racine du projet** pour qu'il ait le contexte complet.
 
+Pour reprendre une session précédente :
+
+```bash
+claude --continue          # reprend automatiquement la dernière conversation
+claude --resume            # affiche la liste des conversations récentes pour en choisir une
+```
+
 ---
 
 ## Commandes & raccourcis essentiels
@@ -62,13 +69,15 @@ Claude analyse automatiquement le répertoire courant : structure des fichiers, 
 
 `@fichier` — ajoute (tag) un fichier précis dans le contexte de la conversation
 
-`/commande` — exécute un skill/command de claude (custom ou non)
+`/command-or-skill-name` — exécute un skill/command de claude (custom ou non)
 
 `! shell-command` — exécute une commande shell directement sans quitter Claude
 
-`Esc Esc` — efface le texte en cours de saisie ; si le champ est vide, affiche l'historique des conversations
+`Esc + Esc` — efface le texte en cours de saisie ; si le champ est vide, affiche l'historique des conversations
 
-`Shift+Tab` — change le mode d'exécution :
+`/clear` — vide le contexte de la conversation en cours (utile entre deux tâches sans lien)
+
+`Shift + Tab` — change le mode d'exécution :
 - **accept edits on** — Claude applique les modifications sans demander
 - **plan mode on** — Claude planifie uniquement, sans rien exécuter
 - **bypass permissions on** — Claude exécute toutes les actions sans aucune confirmation, y compris les opérations sensibles ⚠️
