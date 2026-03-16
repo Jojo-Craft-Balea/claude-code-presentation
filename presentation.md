@@ -418,6 +418,8 @@ You are a code reviewer. Analyze the provided files and report:
 
 Claude peut alors déléguer automatiquement les revues de code à cet agent, ou être invoqué explicitement.
 
+La commande `/agent` permet de créer et gérer ses agents sans éditer manuellement les fichiers.
+
 > Les agents globaux se placent dans `~/.claude/agents/` et sont disponibles dans tous les projets.
 
 ---
@@ -431,6 +433,45 @@ Chaque sous-agent :
 - Renvoie uniquement son résultat final à l'agent principal
 
 > Sur les tâches volumineuses, les sous-agents sont souvent **plus économiques** qu'un seul agent : chaque instance travaille sur un contexte réduit et ne renvoie que ses résultats synthétisés à l'agent principal. Le surcoût existe surtout sur les petites tâches.
+
+---
+
+## Status line
+
+La **status line** est la barre affichée en bas du terminal pendant une session Claude Code. Elle donne en un coup d'œil les informations clés de la session en cours.
+
+```
+claude-sonnet-4-6  ●  auto  |  ↑ 12.4k tokens  |  ~$0.08  |  plan mode
+```
+
+- **Modèle actif** — version de Claude utilisée
+- **Mode courant** — `auto`, `plan`, `bypass`
+- **Tokens consommés** — contexte utilisé depuis le début de la session
+- **Coût estimé** — coût cumulé de la session
+
+---
+
+### Status line > Personnalisation
+
+La status line est entièrement personnalisable via `settings.json`. Le principe : tu fournis un script shell qui reçoit les données de la session en JSON via `stdin` et affiche ce que tu veux.
+
+```json
+{
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/statusline.sh",
+    "padding": 2
+  }
+}
+```
+
+| Paramètre | Type | Description |
+|---|---|---|
+| `type` | string | Toujours `"command"` |
+| `command` | string | Chemin vers un script ou commande inline |
+| `padding` | number | Espacement horizontal (optionnel) |
+
+> Toute la flexibilité vient du script : il reçoit un objet JSON avec les infos de session et affiche exactement ce que tu veux.
 
 ---
 
