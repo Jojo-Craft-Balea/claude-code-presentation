@@ -398,6 +398,30 @@ puis synthétise les résultats.
 
 ---
 
+### Sub-agents > Créer ses propres agents
+
+Il est possible de définir ses propres types de sous-agents dans **`.claude/agents/<nom>/AGENT.md`** :
+
+```markdown
+<!-- .claude/agents/reviewer/AGENT.md -->
+---
+name: reviewer
+description: Reviews code for quality, security, and adherence to team conventions
+tools: Read, Grep, Glob
+---
+
+You are a code reviewer. Analyze the provided files and report:
+- Security issues
+- Violations of SOLID principles
+- Deviations from team conventions defined in CLAUDE.md
+```
+
+Claude peut alors déléguer automatiquement les revues de code à cet agent, ou être invoqué explicitement.
+
+> Les agents globaux se placent dans `~/.claude/agents/` et sont disponibles dans tous les projets.
+
+---
+
 ### Sub-agents > Contexte et isolation
 
 Chaque sous-agent :
