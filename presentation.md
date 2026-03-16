@@ -304,6 +304,8 @@ Claude Code
 
 Claude découvre automatiquement les outils exposés par les serveurs configurés et peut les utiliser dans ses réponses.
 
+> ⚠️ Chaque serveur MCP injecte la description de ses outils dans le contexte au démarrage. Plus tu en configures, plus la fenêtre de contexte est consommée — même si tu n'utilises pas ces outils. À ne pas abuser.
+
 ---
 
 ### MCP > Configuration
