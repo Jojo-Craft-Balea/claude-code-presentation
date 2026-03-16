@@ -287,6 +287,8 @@ Avec MCP, il peut interagir avec n'importe quel système tiers : bases de donné
 
 > MCP transforme Claude en un agent connecté à ton écosystème entier.
 
+> [Model Context Protocol](https://modelcontextprotocol.io/)
+
 ---
 
 ### MCP > Comment ça marche ?
@@ -344,6 +346,66 @@ Il existe déjà un large écosystème de serveurs MCP prêts à l'emploi :
 - **Productivité** : Google Drive, Notion, Slack, Gmail
 - **Navigateur** : Puppeteer, Playwright (pour automatiser le browser)
 
-> [modelcontextprotocol.io/servers](https://modelcontextprotocol.io/servers) — répertoire officiel des serveurs MCP
+---
+
+## Sub-agents
+
+Pour les tâches complexes, Claude peut lancer des **sous-agents** : des instances Claude indépendantes auxquelles il délègue une partie du travail.
+
+Chaque sous-agent dispose de son propre contexte, travaille en parallèle, et renvoie son résultat à l'agent principal.
+
+```
+Agent principal
+    │
+    ├── Sous-agent A : analyse le module auth
+    ├── Sous-agent B : analyse le module paiement
+    └── Sous-agent C : analyse le module notifications
+            │
+            └── Agent principal agrège les résultats
+```
+
+> Idéal pour les tâches longues ou les analyses à grande échelle qui dépasseraient la fenêtre de contexte d'un seul agent.
+
+---
+
+### Sub-agents > Comment les déclencher ?
+
+Claude décide **de lui-même** de spawner des sous-agents quand la tâche s'y prête. Il suffit de lui donner une instruction de haut niveau :
+
+```
+Analyse l'ensemble du codebase et identifie tous les endroits
+où les erreurs ne sont pas correctement gérées.
+```
+
+Il peut aussi être guidé explicitement :
+
+```
+Travaille en parallèle : analyse chaque module séparément
+puis synthétise les résultats.
+```
+
+---
+
+### Sub-agents > Types disponibles
+
+| Type | Rôle |
+|---|---|
+| `general-purpose` | Agent polyvalent — recherche, exploration de code, tâches multi-étapes. Accès à tous les outils. |
+| `Explore` | Exploration rapide de codebase — recherche par patterns glob, grep, lecture de fichiers. Rapide, sans accès en écriture. |
+| `Plan` | Architecte logiciel — conçoit un plan d'implémentation, identifie les fichiers clés, analyse les compromis. Sans accès en écriture. |
+
+> Claude choisit automatiquement le type adapté à la tâche. Il est aussi possible de le spécifier explicitement dans son prompt.
+
+---
+
+### Sub-agents > Contexte et isolation
+
+Chaque sous-agent :
+- A sa propre fenêtre de contexte (indépendante de l'agent principal)
+- Peut lire des fichiers, exécuter des commandes, appeler des outils MCP
+- Ne partage pas d'état avec les autres sous-agents
+- Renvoie uniquement son résultat final à l'agent principal
+
+> Sur les tâches volumineuses, les sous-agents sont souvent **plus économiques** qu'un seul agent : chaque instance travaille sur un contexte réduit et ne renvoie que ses résultats synthétisés à l'agent principal. Le surcoût existe surtout sur les petites tâches.
 
 ---
