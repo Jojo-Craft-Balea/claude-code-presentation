@@ -433,3 +433,24 @@ Chaque sous-agent :
 > Sur les tâches volumineuses, les sous-agents sont souvent **plus économiques** qu'un seul agent : chaque instance travaille sur un contexte réduit et ne renvoie que ses résultats synthétisés à l'agent principal. Le surcoût existe surtout sur les petites tâches.
 
 ---
+
+## Récap — Quel outil pour quel cas ?
+
+| Outil | Cas d'usage | Déclenchement |
+|---|---|---|
+| `CLAUDE.md` global | Préférences perso, langue, conventions universelles | Toujours actif |
+| `CLAUDE.md` projet | Contexte métier, règles permanentes du projet | Toujours actif |
+| `.claude/rules/` | Règles d'équipe, conventions (ciblables par glob) | Toujours actif |
+| MCP | Connexion à un outil/service externe (GitHub, BDD...) | Toujours actif |
+| Skill contextuel | Connaissance chargée quand Claude la juge pertinente | Automatique |
+| Skill invocable | Workflow à effets de bord, déclenché explicitement | Manuel (`/nom`) |
+| Agent custom | Tâche spécialisée déléguée à une instance dédiée | Automatique |
+
+**Règle simple** :
+- Ça doit toujours s'appliquer → `CLAUDE.md`
+- C'est une connaissance contextuelle → Skill
+- C'est un workflow à déclencher → Skill invocable
+- C'est une tâche autonome spécialisée → Agent
+- C'est un système externe → MCP
+
+---
