@@ -2,9 +2,7 @@
 
 Présentation interactive de [Claude Code](https://claude.ai/code) destinée aux développeurs.
 
-Couvre les fonctionnalités essentielles : navigation dans le codebase, édition de fichiers, commandes bash, configuration via `CLAUDE.md`, skills et MCP.
-
-**Démo en ligne :** https://jojo-craft-balea.github.io/claude-code-presentation/
+**Présentation :** https://jojo-craft-balea.github.io/claude-code-presentation/
 
 ## Stack
 

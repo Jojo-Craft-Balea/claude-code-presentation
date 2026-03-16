@@ -37,7 +37,7 @@ curl -fsSL https://claude.ai/install.sh | bash
 irm https://claude.ai/install.ps1 | iex
 ```
 
-Documentation officielle : [code.claude.com/docs/en/quickstart](https://code.claude.com/docs/en/quickstart)
+Documentation officielle : [docs.anthropic.com/en/docs/claude-code/quickstart](https://docs.anthropic.com/en/docs/claude-code/quickstart)
 
 ---
 
@@ -60,9 +60,9 @@ Claude analyse automatiquement le répertoire courant : structure des fichiers, 
 
 `?` — affiche toutes les commandes disponibles
 
-`@fichier` — ajoute un fichier précis dans le contexte de la conversation
+`@fichier` — ajoute (tag) un fichier précis dans le contexte de la conversation
 
-`/commande` — lance une commande slash
+`/commande` — exécute une commande/skill de claude (custom ou non)
 
 `! commande` — exécute une commande shell directement sans quitter Claude
 
