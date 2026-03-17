@@ -152,13 +152,14 @@ Un skill joue **deux rôles** selon sa configuration :
 Claude charge le skill quand il le juge pertinent, sans que tu le demandes.
 
 ```markdown
-<!-- .claude/skills/api-conventions/SKILL.md -->
+<!-- .claude/skills/commit-format/SKILL.md -->
 ---
-name: api-conventions
-description: REST API design conventions for our services
+name: commit-format
+description: Commit message conventions for this project
 ---
-- Use kebab-case for URL paths
-- Always include pagination for list endpoints
+Use Conventional Commits: type(scope): description
+Types: feat, fix, docs, refactor, test, chore
+Scopes: api, ui, db, auth
 ```
 
 ---
