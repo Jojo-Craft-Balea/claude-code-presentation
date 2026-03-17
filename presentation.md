@@ -115,25 +115,7 @@ Le fichier `~/.claude/CLAUDE.md` est chargé dans **toutes** les sessions, quel 
 
 ### Configuration > .claude/rules
 
-Le dossier `.claude/rules/` dans un projet permet d'ajouter des règles locales, propres à ce projet.
-
-```
-mon-projet/
-├── .claude/
-│   └── rules/
-│       ├── conventions.md    ← conventions de code du projet
-│       ├── architecture.md   ← règles d'architecture
-│       └── ...
-└── ...
-```
-
-Chaque fichier Markdown dans ce dossier est automatiquement chargé par Claude au démarrage de la session.
-
----
-
-#### Configuration > .claude/rules > Règles par type de fichier
-
-Un frontmatter `globs` permet de cibler un type de fichier spécifique :
+Le dossier `.claude/rules/` permet d'ajouter des règles **ciblées par type de fichier** via un frontmatter `globs`.
 
 ```markdown
 ---
@@ -145,9 +127,13 @@ Pour les fichiers de test :
 - Ne jamais mocker la base de données
 ```
 
-Claude charge ce fichier uniquement quand il travaille sur des fichiers qui matchent le glob.
+Claude charge ce fichier uniquement quand il travaille sur des fichiers qui matchent le glob — le reste du temps, il n'occupe pas de contexte.
 
-> Idéal pour partager des règles d'équipe : conventions de nommage, patterns à respecter, fichiers à ne jamais modifier...
+**Règle de décision :**
+- Règle générale → `CLAUDE.md` (toujours en contexte, plus simple)
+- Règle ciblée sur un type de fichier → `.claude/rules/` avec `globs`
+
+> Sans `globs`, `.claude/rules/` n'apporte rien de plus qu'un `CLAUDE.md` et fragmente inutilement la config.
 
 ---
 
