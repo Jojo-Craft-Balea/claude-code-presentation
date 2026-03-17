@@ -58,7 +58,10 @@ Pour reprendre une session précédente :
 
 ```bash
 claude --continue          # reprend automatiquement la dernière conversation
+claude -c                  # alias de --continue
+
 claude --resume            # affiche la liste des conversations récentes pour en choisir une
+claude -r                  # alias de --resume
 ```
 
 ---
