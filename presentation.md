@@ -212,7 +212,7 @@ Invoquer avec `/fix-issue 1234`.
 
 ### Configuration > settings.json
 
-Le fichier `~/.claude/settings.json` (global) ou `.claude/settings.json` (projet) permet de configurer le comportement de Claude.
+Le fichier `~/.claude/settings.json` (global) ou `.claude/settings.local.json` (projet) permet de configurer le comportement de Claude.
 
 ---
 
