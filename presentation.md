@@ -502,7 +502,8 @@ Chaque sous-agent :
 
 ## Status line
 
-La **status line** est la barre affichée en bas du terminal pendant une session Claude Code. Elle donne en un coup d'œil les informations clés de la session en cours.
+La **status line** est la barre affichée en bas du terminal pendant une session Claude Code. 
+Elle donne en un coup d'œil les informations clés de la session en cours.
 
 ```
 claude-sonnet-4-6  ●  auto  |  ↑ 12.4k tokens  |  ~$0.08  |  plan mode
@@ -512,6 +513,7 @@ claude-sonnet-4-6  ●  auto  |  ↑ 12.4k tokens  |  ~$0.08  |  plan mode
 - **Mode courant** — `auto`, `plan`, `bypass`
 - **Tokens consommés** — contexte utilisé depuis le début de la session
 - **Coût estimé** — coût cumulé de la session
+
 
 ---
 
@@ -536,6 +538,12 @@ La status line est entièrement personnalisable via `settings.json`. Le principe
 | `padding` | number | Espacement horizontal (optionnel) |
 
 > Toute la flexibilité vient du script : il reçoit un objet JSON avec les infos de session et affiche exactement ce que tu veux.
+
+Tool qui permet de pimper ça : [ccstatusline](https://github.com/sirmalloc/ccstatusline)
+
+```bash
+npx -y ccstatusline@latest
+```
 
 ---
 
