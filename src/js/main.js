@@ -1,6 +1,6 @@
 import { presentationMarkdown } from './presentation-content.js';
 
-const SLIDE_SEPARATOR = /\n---\n/;
+const SLIDE_SEPARATOR = /\n<!-- slide -->\n/;
 
 let currentSlide = 0;
 let slides = [];

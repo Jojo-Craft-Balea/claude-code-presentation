@@ -11,7 +11,7 @@
 
 > Pas un simple copilote — un **agent** qui peut réaliser des tâches complexes de bout en bout.
 
----
+<!-- slide -->
 
 ## Claude web vs Claude Code
 
@@ -23,7 +23,7 @@ Le LLM sous-jacent est le **même** — c'est l'environnement qui change.
 
 > Claude web te répond. Claude Code **agit**.
 
----
+<!-- slide -->
 
 ## Installation
 
@@ -39,7 +39,7 @@ irm https://claude.ai/install.ps1 | iex
 
 Documentation officielle : [docs.anthropic.com/en/docs/claude-code/quickstart](https://docs.anthropic.com/en/docs/claude-code/quickstart)
 
----
+<!-- slide -->
 
 ## Lancer Claude dans le terminal
 
@@ -67,7 +67,7 @@ claude --resume            # affiche la liste des conversations récentes pour e
 claude -r                  # alias de --resume
 ```
 
----
+<!-- slide -->
 
 ## Commandes & raccourcis essentiels
 
@@ -88,7 +88,7 @@ claude -r                  # alias de --resume
 - **plan mode on** — Claude planifie uniquement, sans rien exécuter
 - **bypass permissions on** — Claude exécute toutes les actions sans aucune confirmation, y compris les opérations sensibles ⚠️
 
----
+<!-- slide -->
 
 ## Configuration
 
@@ -109,7 +109,7 @@ mon-projet/
 
 La commande `/init` demande à Claude de scanner le projet et de générer un `CLAUDE.md` adapté à son contenu.
 
----
+<!-- slide -->
 
 #### Configuration > CLAUDE.md > Configuration globale
 
@@ -117,7 +117,7 @@ Le fichier `~/.claude/CLAUDE.md` est chargé dans **toutes** les sessions, quel 
 
 > ⚠️ Claude applique tout ce qui est dans ce fichier à chaque conversation. N'y mettre que des instructions claires et utiles pour lui — une information floue ou hors sujet risque de perturber son comportement plutôt que de l'améliorer.
 
----
+<!-- slide -->
 
 ### Configuration > .claude/rules
 
@@ -142,7 +142,7 @@ Claude charge ce fichier uniquement quand il travaille sur des fichiers qui matc
 
 > Sans `paths`, `.claude/rules/` n'apporte rien de plus qu'un `CLAUDE.md` et fragmente inutilement la config.
 
----
+<!-- slide -->
 
 ### Configuration > Skills
 
@@ -156,7 +156,7 @@ Un skill définit un **contexte ou un workflow** que Claude peut utiliser :
 - **Par défaut** — Claude charge le skill automatiquement quand il juge le contenu pertinent (conventions de code, règles métier, format de commit...)
 - **Avec `disable-model-invocation: true`** — le skill devient une commande `/skill-name` déclenchée manuellement : utile pour les workflows avec effets de bord (créer une PR, modifier des fichiers, appeler une API...)
 
----
+<!-- slide -->
 
 #### Configuration > Skills > 2. Exemple concret — le skill `code`
 
@@ -181,7 +181,7 @@ You are a senior full-stack developer implementing a task from a ticket.
    - Clean code: naming, single responsibility, no magic values
 ```
 
----
+<!-- slide -->
 
 #### Configuration > Skills > Règle de décision
 
@@ -193,13 +193,13 @@ You are a senior full-stack developer implementing a task from a ticket.
 
 > Les skills globaux se placent dans `~/.claude/skills/` et sont disponibles dans tous les projets.
 
----
+<!-- slide -->
 
 ### Configuration > settings.json
 
 Le fichier `~/.claude/settings.json` (global) ou `.claude/settings.local.json` (projet) permet de configurer le comportement de Claude.
 
----
+<!-- slide -->
 
 #### Configuration > settings.json > Permissions
 
@@ -224,7 +224,7 @@ Contrôle quelles actions Claude peut effectuer :
 }
 ```
 
----
+<!-- slide -->
 
 #### Configuration > settings.json > Hooks
 
@@ -249,7 +249,7 @@ Les hooks permettent d'exécuter des commandes shell en réponse aux actions de 
 
 > Utile pour lancer automatiquement le linter après chaque modification de fichier, notifier une action sensible, logger les outils utilisés...
 
----
+<!-- slide -->
 
 ### Configuration > Hiérarchie de priorité
 
@@ -271,7 +271,7 @@ Les fichiers de configuration s'empilent par couches, du plus général au plus 
        ╚══════════════════════════════════════════════╝
 ```
 
----
+<!-- slide -->
 
 ## MCP — Model Context Protocol
 
@@ -284,7 +284,7 @@ Avec MCP, il peut interagir avec n'importe quel système tiers : bases de donné
 
 > [Model Context Protocol](https://modelcontextprotocol.io/)
 
----
+<!-- slide -->
 
 ### MCP > Comment ça marche ?
 
@@ -303,7 +303,7 @@ Claude découvre automatiquement les outils exposés par les serveurs configuré
 
 > ⚠️ Chaque serveur MCP injecte la description de ses outils dans le contexte au démarrage. Plus tu en configures, plus la fenêtre de contexte est consommée — même si tu n'utilises pas ces outils. À ne pas abuser.
 
----
+<!-- slide -->
 
 ### MCP > Configuration
 
@@ -329,7 +329,7 @@ Les serveurs MCP se configurent dans **`.mcp.json`** à la racine du projet (ou 
 
 > `.mcp.json` peut être commité dans le repo — pratique pour partager la config MCP avec toute l'équipe.
 
----
+<!-- slide -->
 
 ### MCP > Serveurs disponibles
 
@@ -341,7 +341,7 @@ Il existe déjà un large écosystème de serveurs MCP prêts à l'emploi :
 - **Productivité** : Google Drive, Notion, Slack, Gmail
 - **Navigateur** : Puppeteer, Playwright (pour automatiser le browser)
 
----
+<!-- slide -->
 
 ### MCP > Alternative : CLI locale
 
@@ -357,7 +357,7 @@ Avec CLI :    API → script bash → Skill → Claude  (chargé uniquement à l
 
 > Idéal quand tu n'as pas accès à un serveur MCP pour l'outil ciblé, ou quand tu veux éviter de polluer le contexte avec des outils rarement utilisés.
 
----
+<!-- slide -->
 
 ### MCP > Alternative : CLI locale > Créer une CLI bash
 
@@ -389,7 +389,7 @@ chmod +x ~/.local/bin/my-api
 my-api get-user 42   # accessible depuis n'importe quel terminal
 ```
 
----
+<!-- slide -->
 
 ### MCP > Alternative : CLI locale > Intégration dans un skill
 
@@ -414,7 +414,7 @@ Invoquer avec `/get-user 42`.
 - Intégration permanente, outils complexes, accès à une base de données → **MCP**
 - Usage ponctuel, API simple, éviter la consommation de contexte → **CLI bash + Skill**
 
----
+<!-- slide -->
 
 ## Sub-agents
 
@@ -434,7 +434,7 @@ Agent principal
 
 > Idéal pour les tâches longues ou les analyses à grande échelle qui dépasseraient la fenêtre de contexte d'un seul agent.
 
----
+<!-- slide -->
 
 ### Sub-agents > Comment les déclencher ?
 
@@ -452,7 +452,7 @@ Travaille en parallèle : analyse chaque module séparément
 puis synthétise les résultats.
 ```
 
----
+<!-- slide -->
 
 ### Sub-agents > Types disponibles
 
@@ -464,7 +464,7 @@ puis synthétise les résultats.
 
 > Claude choisit automatiquement le type adapté à la tâche. Il est aussi possible de le spécifier explicitement dans son prompt.
 
----
+<!-- slide -->
 
 ### Sub-agents > Créer ses propres agents
 
@@ -499,7 +499,7 @@ La commande `/agent` permet de créer et gérer ses agents sans éditer manuelle
 
 > Les agents globaux se placent dans `~/.claude/agents/` et sont disponibles dans tous les projets.
 
----
+<!-- slide -->
 
 ### Sub-agents > Contexte et isolation
 
@@ -511,7 +511,7 @@ Chaque sous-agent :
 
 > Sur les tâches volumineuses, les sous-agents sont souvent **plus économiques** qu'un seul agent : chaque instance travaille sur un contexte réduit et ne renvoie que ses résultats synthétisés à l'agent principal. Le surcoût existe surtout sur les petites tâches.
 
----
+<!-- slide -->
 
 ## Status line
 
@@ -528,7 +528,7 @@ claude-sonnet-4-6  ●  auto  |  ↑ 12.4k tokens  |  ~$0.08  |  plan mode
 - **Coût estimé** — coût cumulé de la session
 
 
----
+<!-- slide -->
 
 ### Status line > Personnalisation
 
@@ -558,7 +558,7 @@ Tool qui permet de pimper ça : [ccstatusline](https://github.com/sirmalloc/ccst
 npx -y ccstatusline@latest
 ```
 
----
+<!-- slide -->
 
 ## Récap — Quel outil pour quel cas ?
 
@@ -582,4 +582,4 @@ npx -y ccstatusline@latest
 - C'est un système externe permanent → MCP
 - C'est un appel ponctuel à une API externe → CLI bash + Skill invocable
 
----
+<!-- slide -->
