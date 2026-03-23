@@ -142,49 +142,40 @@ Claude charge ce fichier uniquement quand il travaille sur des fichiers qui matc
 
 ### Configuration > Skills
 
-Les skills enrichissent les connaissances de Claude avec des informations spécifiques à votre projet, votre équipe ou votre domaine. 
+Les skills enrichissent les connaissances de Claude avec des informations spécifiques à votre projet, votre équipe ou votre domaine.
 C'est un concept unifié stocké dans **`.claude/skills/<nom>/SKILL.md`**.
 
-Un skill joue **deux rôles** selon sa configuration :
+#### Configuration > Skills > 1. Principe
 
-#### Configuration > Skills > 1. Connaissance contextuelle (chargé automatiquement)
+Un skill définit un **contexte ou un workflow** que Claude peut utiliser :
 
-Claude charge le skill quand il le juge pertinent, sans que tu le demandes.
+- **Par défaut** — Claude charge le skill automatiquement quand il juge le contenu pertinent (conventions de code, règles métier, format de commit...)
+- **Avec `disable-model-invocation: true`** — le skill devient une commande `/skill-name` déclenchée manuellement : utile pour les workflows avec effets de bord (créer une PR, modifier des fichiers, appeler une API...)
+
+---
+
+#### Configuration > Skills > 2. Exemple concret — le skill `code`
+
+Un skill peut orchestrer plusieurs agents spécialisés en séquence — chargé à la demande, il transforme une intention vague en workflow structuré et reproductible.
 
 ```markdown
-<!-- .claude/skills/commit-format/SKILL.md -->
+<!-- .claude/skills/code.md -->
 ---
-name: commit-format
-description: Commit message conventions for this project
+name: code
+description: Implement a feature or fix from a ticket, with full explore/plan/execute/review cycle
+when_to_trigger: When the user asks to implement a feature, fix a bug, or work on a ticket
 ---
-Use Conventional Commits: type(scope): description
-Types: feat, fix, docs, refactor, test, chore
-Scopes: api, ui, db, auth
+You are a senior full-stack developer implementing a task from a ticket.
+
+1. **Explore** — Read the relevant files, understand the existing architecture and conventions
+2. **Fetch ticket** — Retrieve the ticket details (Linear, Jira, etc.) using $ARGUMENTS as the ticket ID
+3. **Plan** — Outline the required changes before touching any file; confirm with the user if scope is large
+4. **Execute** — Implement the changes following the project conventions (SOLID, DRY, KISS, no unnecessary comments)
+5. **Review** — Run the following checks on every modified file:
+   - Optimization: remove dead code, simplify logic
+   - Security: no injection, no exposed secrets, validate at boundaries
+   - Clean code: naming, single responsibility, no magic values
 ```
-
----
-
-#### Configuration > Skills > 2. Workflow invocable (déclenché manuellement)
-
-Avec `disable-model-invocation: true`, le skill devient une commande `/skill-name`.
-
-```markdown
-<!-- .claude/skills/fix-issue/SKILL.md -->
----
-name: fix-issue
-description: Fix a GitHub issue
-disable-model-invocation: true
----
-Analyze and fix the GitHub issue: $ARGUMENTS.
-
-1. Use `gh issue view` to get the issue details
-2. Search the codebase for relevant files
-3. Implement the fix
-4. Write and run tests
-5. Create a descriptive commit and open a PR
-```
-
-Invoquer avec `/fix-issue 1234`.
 
 ---
 
@@ -208,7 +199,7 @@ Le fichier `~/.claude/settings.json` (global) ou `.claude/settings.local.json` (
 
 #### Configuration > settings.json > Permissions
 
-Contrôle quelles actions Claude peut effectuer sans demander de confirmation :
+Contrôle quelles actions Claude peut effectuer :
 
 ```json
 {
@@ -228,18 +219,6 @@ Contrôle quelles actions Claude peut effectuer sans demander de confirmation :
   }
 }
 ```
-
-> ⚠️ À réserver aux environnements isolés (CI, conteneurs). Ne jamais activer en local sur une machine de travail.
-
-**`"skipDangerousModePermissionPrompt": true`** — supprime uniquement le message de confirmation affiché quand tu actives manuellement le mode bypass via `Shift+Tab`. Le bypass n'est pas activé en permanence — tu dois toujours le déclencher toi-même.
-
-```json
-{
-  "skipDangerousModePermissionPrompt": true
-}
-```
-
-> Utile si tu actives souvent le bypass manuellement et que le prompt de confirmation est superflu pour toi.
 
 ---
 
@@ -335,6 +314,79 @@ Il existe déjà un large écosystème de serveurs MCP prêts à l'emploi :
 - **Cloud** : AWS, Azure, GCP
 - **Productivité** : Google Drive, Notion, Slack, Gmail
 - **Navigateur** : Puppeteer, Playwright (pour automatiser le browser)
+
+---
+
+### MCP > Alternative : CLI locale
+
+Les MCPs sont chargés au démarrage et consomment de la fenêtre de contexte en permanence — même quand tu n'en as pas besoin.
+
+**Alternative** : transformer une API accessible en CLI bash locale, puis l'appeler depuis un skill invocable.
+
+```
+Sans MCP :    API → (non accessible depuis Claude)
+Avec MCP :    API → MCP Server → Claude           (contexte consommé en permanence)
+Avec CLI :    API → script bash → Skill → Claude  (chargé uniquement à la demande)
+```
+
+> Idéal quand tu n'as pas accès à un serveur MCP pour l'outil ciblé, ou quand tu veux éviter de polluer le contexte avec des outils rarement utilisés.
+
+---
+
+### MCP > Alternative : CLI locale > Créer une CLI bash
+
+Un simple script bash qui wrappe un appel `curl` suffit :
+
+```bash
+#!/usr/bin/env bash
+# ~/.local/bin/my-api
+
+BASE_URL="https://api.example.com"
+API_KEY="${MY_API_KEY}"
+
+case "$1" in
+  get-user)
+    curl -s -H "Authorization: Bearer $API_KEY" "$BASE_URL/users/$2" | jq .
+    ;;
+  list-tickets)
+    curl -s -H "Authorization: Bearer $API_KEY" "$BASE_URL/tickets" | jq .
+    ;;
+  *)
+    echo "Usage: my-api <get-user|list-tickets> [args]" >&2
+    exit 1
+    ;;
+esac
+```
+
+```bash
+chmod +x ~/.local/bin/my-api
+my-api get-user 42   # accessible depuis n'importe quel terminal
+```
+
+---
+
+### MCP > Alternative : CLI locale > Intégration dans un skill
+
+```markdown
+<!-- .claude/skills/get-user/SKILL.md -->
+---
+name: get-user
+description: Fetch a user from the internal API
+disable-model-invocation: true
+---
+Retrieve the user details using the local CLI:
+
+1. Run `my-api get-user $ARGUMENTS` via Bash
+2. Display the result to the user
+```
+
+Invoquer avec `/get-user 42`.
+
+> La description de la CLI n'est **pas injectée dans le contexte** au démarrage — elle n'existe que le temps de l'exécution du skill.
+
+**Règle de décision :**
+- Intégration permanente, outils complexes, accès à une base de données → **MCP**
+- Usage ponctuel, API simple, éviter la consommation de contexte → **CLI bash + Skill**
 
 ---
 
@@ -473,15 +525,18 @@ La status line est entièrement personnalisable via `settings.json`. Le principe
 | `CLAUDE.md` projet | Contexte métier, règles permanentes du projet | Toujours actif |
 | `.claude/rules/` | Règles d'équipe, conventions (ciblables par glob) | Toujours actif |
 | MCP | Connexion à un outil/service externe (GitHub, BDD...) | Toujours actif |
+| CLI bash + Skill | Appel ponctuel à une API externe, sans consommer le contexte | Manuel (`/nom`) |
 | Skill contextuel | Connaissance chargée quand Claude la juge pertinente | Automatique |
 | Skill invocable | Workflow à effets de bord, déclenché explicitement | Manuel (`/nom`) |
 | Agent custom | Tâche spécialisée déléguée à une instance dédiée | Automatique |
 
 **Règle simple** :
 - Ça doit toujours s'appliquer → `CLAUDE.md`
+- Ça cible un type de fichier précis → `.claude/rules/` (avec `globs`)
 - C'est une connaissance contextuelle → Skill
 - C'est un workflow à déclencher → Skill invocable
 - C'est une tâche autonome spécialisée → Agent
-- C'est un système externe → MCP
+- C'est un système externe permanent → MCP
+- C'est un appel ponctuel à une API externe → CLI bash + Skill invocable
 
 ---
