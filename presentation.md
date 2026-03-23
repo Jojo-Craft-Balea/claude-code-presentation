@@ -247,6 +247,28 @@ Les hooks permettent d'exécuter des commandes shell en réponse aux actions de 
 
 ---
 
+### Configuration > Hiérarchie de priorité
+
+Les fichiers de configuration s'empilent par couches, du plus général au plus spécifique. Chaque couche hérite des couches inférieures — la couche supérieure est plus ciblée et prend le dessus.
+
+```
+                   ╔══════════════════════╗
+                   ║  /sous-dossier/      ║
+                   ║  CLAUDE.md           ║
+             ╔═════╩══════════════════════╩═════╗
+             ║      .claude/  (projet)          ║
+             ║      CLAUDE.md · skills          ║
+             ║      rules · agents              ║
+             ║      settings.local.json         ║
+       ╔═════╩══════════════════════════════════╩═════╗
+       ║          ~/.claude/  (global)                ║
+       ║          CLAUDE.md · skills · agents         ║
+       ║          settings.json                       ║
+       ╚══════════════════════════════════════════════╝
+```
+
+---
+
 ## MCP — Model Context Protocol
 
 **MCP** est un protocole ouvert qui permet à Claude de se connecter à des **sources de données et outils externes**.
