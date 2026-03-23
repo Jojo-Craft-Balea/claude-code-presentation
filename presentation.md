@@ -52,6 +52,9 @@ Claude analyse automatiquement le répertoire courant : structure des fichiers, 
 
 **Tout ce qui est dans le dossier fait partie de son contexte.**
 
+> **Token** — unité de base traitée par le modèle (1 token ≈ 3/4 d'un mot courant).
+> Chaque token consommé en entrée (ton prompt + contexte) et en sortie (la réponse) est comptabilisé — c'est ce qui détermine le coût de la session.
+
 > Lance toujours Claude **depuis la racine du projet** pour qu'il ait le contexte complet.
 
 Pour reprendre une session précédente :
@@ -118,11 +121,12 @@ Le fichier `~/.claude/CLAUDE.md` est chargé dans **toutes** les sessions, quel 
 
 ### Configuration > .claude/rules
 
-Le dossier `.claude/rules/` permet d'ajouter des règles **ciblées par type de fichier** via un frontmatter `globs`.
+Le dossier `.claude/rules/` permet d'ajouter des règles **ciblées par type de fichier** via un frontmatter `paths`.
 
 ```markdown
 ---
-globs: "**/*.test.ts"
+paths:
+  - "**/*.test.ts"
 ---
 
 Pour les fichiers de test :
@@ -130,13 +134,13 @@ Pour les fichiers de test :
 - Ne jamais mocker la base de données
 ```
 
-Claude charge ce fichier uniquement quand il travaille sur des fichiers qui matchent le glob — le reste du temps, il n'occupe pas de contexte.
+Claude charge ce fichier uniquement quand il travaille sur des fichiers qui matchent le pattern — le reste du temps, il n'occupe pas de contexte.
 
 **Règle de décision :**
 - Règle générale → `CLAUDE.md` (toujours en contexte, plus simple)
-- Règle ciblée sur un type de fichier → `.claude/rules/` avec `globs`
+- Règle ciblée sur un type de fichier → `.claude/rules/` avec `paths`
 
-> Sans `globs`, `.claude/rules/` n'apporte rien de plus qu'un `CLAUDE.md` et fragmente inutilement la config.
+> Sans `paths`, `.claude/rules/` n'apporte rien de plus qu'un `CLAUDE.md` et fragmente inutilement la config.
 
 ---
 
@@ -163,7 +167,7 @@ Un skill peut orchestrer plusieurs agents spécialisés en séquence — chargé
 ---
 name: code
 description: Implement a feature or fix from a ticket, with full explore/plan/execute/review cycle
-when_to_trigger: When the user asks to implement a feature, fix a bug, or work on a ticket
+disable-model-invocation: true
 ---
 You are a senior full-stack developer implementing a task from a ticket.
 
@@ -183,8 +187,8 @@ You are a senior full-stack developer implementing a task from a ticket.
 
 | Cas | Outil |
 |---|---|
-| Convention utile seulement parfois | Skill (chargé à la demande) |
 | Règle utile à toutes les sessions | `CLAUDE.md` |
+| Convention utile seulement parfois | Skill (chargé à la demande) |
 | Workflow avec effets de bord à déclencher manuellement | Skill avec `disable-model-invocation: true` |
 
 > Les skills globaux se placent dans `~/.claude/skills/` et sont disponibles dans tous les projets.
@@ -471,7 +475,8 @@ Il est possible de définir ses propres types de sous-agents dans **`.claude/age
 ---
 name: reviewer
 description: Reviews code for quality, security, and adherence to team conventions
-tools: Read, Grep, Glob
+model: sonnet
+color: cyan
 ---
 
 You are a code reviewer. Analyze the provided files and report:
@@ -479,6 +484,14 @@ You are a code reviewer. Analyze the provided files and report:
 - Violations of SOLID principles
 - Deviations from team conventions defined in CLAUDE.md
 ```
+
+Le champ `model` définit le modèle utilisé par l'agent. Si omis, il hérite du modèle de la conversation parente.
+
+| Valeur | Usage recommandé |
+|---|---|
+| `haiku` | Tâches légères, agents workers fréquemment invoqués |
+| `sonnet` | Cas général — équilibre capacité / coût |
+| `opus` | Décisions complexes nécessitant le maximum de raisonnement |
 
 Claude peut alors déléguer automatiquement les revues de code à cet agent, ou être invoqué explicitement.
 
