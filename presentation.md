@@ -55,6 +55,8 @@ Claude analyse automatiquement le répertoire courant : structure des fichiers, 
 > **Token** — unité de base traitée par le modèle (1 token ≈ 3/4 d'un mot courant).
 > Chaque token consommé en entrée (ton prompt + contexte) et en sortie (la réponse) est comptabilisé — c'est ce qui détermine le coût de la session.
 
+<!-- slide -->
+
 > Lance toujours Claude **depuis la racine du projet** pour qu'il ait le contexte complet.
 
 Pour reprendre une session précédente :
@@ -128,13 +130,14 @@ Le dossier `.claude/rules/` permet d'ajouter des règles **ciblées par type de 
 paths:
   - "**/*.test.ts"
 ---
-
 Pour les fichiers de test :
 - Utiliser describe/it de Vitest
 - Ne jamais mocker la base de données
 ```
 
 Claude charge ce fichier uniquement quand il travaille sur des fichiers qui matchent le pattern — le reste du temps, il n'occupe pas de contexte.
+
+<!-- slide -->
 
 **Règle de décision :**
 - Règle générale → `CLAUDE.md` (toujours en contexte, plus simple)
@@ -163,7 +166,6 @@ Un skill définit un **contexte ou un workflow** que Claude peut utiliser :
 Un skill peut orchestrer plusieurs agents spécialisés en séquence — chargé à la demande, il transforme une intention vague en workflow structuré et reproductible.
 
 ```markdown
-<!-- .claude/skills/code.md -->
 ---
 name: code
 description: Implement a feature or fix from a ticket, with full explore/plan/execute/review cycle
@@ -208,8 +210,9 @@ Contrôle quelles actions Claude peut effectuer :
 ```json
 {
   "permissions": {
-    "allow": ["Bash(git *)", "Bash(npm *)", "Edit"],
-    "deny": ["Bash(rm *)"]
+    "deny": ["Bash(rm *)"],
+    "ask": [],
+    "allow": ["Bash(git *)", "Bash(npm *)", "Edit"]
   }
 }
 ```
@@ -245,7 +248,7 @@ Les hooks permettent d'exécuter des commandes shell en réponse aux actions de 
 }
 ```
 
-Événements disponibles : `PreToolUse`, `PostToolUse`, `Notification`, `Stop`
+Événements disponibles : `PreToolUse`, `PostToolUse`, `Notification`, `Stop`, ... [Hooks](https://code.claude.com/docs/fr/hooks-guide#comment-fonctionnent-les-hooks)
 
 > Utile pour lancer automatiquement le linter après chaque modification de fichier, notifier une action sensible, logger les outils utilisés...
 
@@ -364,9 +367,6 @@ Avec CLI :    API → script bash → Skill → Claude  (chargé uniquement à l
 Un simple script bash qui wrappe un appel `curl` suffit :
 
 ```bash
-#!/usr/bin/env bash
-# ~/.local/bin/my-api
-
 BASE_URL="https://api.example.com"
 API_KEY="${MY_API_KEY}"
 
@@ -394,7 +394,6 @@ my-api get-user 42   # accessible depuis n'importe quel terminal
 ### MCP > Alternative : CLI locale > Intégration dans un skill
 
 ```markdown
-<!-- .claude/skills/get-user/SKILL.md -->
 ---
 name: get-user
 description: Fetch a user from the internal API
@@ -471,19 +470,19 @@ puis synthétise les résultats.
 Il est possible de définir ses propres types de sous-agents dans **`.claude/agents/<nom>/AGENT.md`** :
 
 ```markdown
-<!-- .claude/agents/reviewer/AGENT.md -->
 ---
 name: reviewer
 description: Reviews code for quality, security, and adherence to team conventions
 model: sonnet
 color: cyan
 ---
-
 You are a code reviewer. Analyze the provided files and report:
 - Security issues
 - Violations of SOLID principles
 - Deviations from team conventions defined in CLAUDE.md
 ```
+
+<!-- slide -->
 
 Le champ `model` définit le modèle utilisé par l'agent. Si omis, il hérite du modèle de la conversation parente.
 
@@ -572,6 +571,8 @@ npx -y ccstatusline@latest
 | Skill contextuel | Connaissance chargée quand Claude la juge pertinente | Automatique |
 | Skill invocable | Workflow à effets de bord, déclenché explicitement | Manuel (`/nom`) |
 | Agent custom | Tâche spécialisée déléguée à une instance dédiée | Automatique |
+
+<!-- slide -->
 
 **Règle simple** :
 - Ça doit toujours s'appliquer → `CLAUDE.md`
